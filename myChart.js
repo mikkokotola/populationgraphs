@@ -69,7 +69,9 @@ function fetchData(countryCode, indicatorCode) {
         return;
     }
     
-    const url = 'http://localhost:3001/country/' + countryCode + '/indicator/' + indicatorCode
+    // Function in Google cloud
+    const baseUrl = 'https://europe-west1-world-bank-data.cloudfunctions.net/world-bank-fetcher/country/'
+    const url = baseUrl + countryCode + '/indicator/' + indicatorCode
     // NOTE: could call directly const url='https://api.worldbank.org/v2/country/' + countryCode + '/indicator/' + indicatorCode + '?format=json';
     // ,but World Bank CORS policy not allowing requests from file run in browser.
 
