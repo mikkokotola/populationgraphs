@@ -56,7 +56,7 @@ function renderError(errorMessage) {
     setTimeout(() => document.getElementById('errorbox').innerHTML = '', 5000);
 }
 
-function fetchData(countryCode, indicatorCode) {
+function fetchDataAndRenderGraph(countryCode, indicatorCode) {
     if (!validateCountryCode(countryCode)) {
         console.log('Invalid countryCode: ' + countryCode)
         renderError('Country code malformed. Valid example: FIN');
@@ -111,11 +111,12 @@ function fetchData(countryCode, indicatorCode) {
     }); 
 }
 
+function renderCountryGraph () {
+    var country = document.getElementById('country').value;
+    const indicator = 'SP.POP.TOTL';
+    fetchDataAndRenderGraph(country, indicator);
+}
 
-$("#renderBtn").click(
-    function () {
-        var country = document.getElementById('country').value;
-        const indicator = 'SP.POP.TOTL';
-        fetchData(country, indicator);
-    }    
-);
+document.getElementById('renderBtn').addEventListener('click', renderCountryGraph);
+
+document.getElementById('country').focus();

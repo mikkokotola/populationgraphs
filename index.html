@@ -5,52 +5,28 @@
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <meta http-equiv='X-UA-Compatible' content='ie=edge'>
-    <title>Population visualizations</title>
+    <title>Population graphs</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <style>
-        .container {
-            margin: auto;
-            width: 100vh;
-            max-width: 100vw;
-            min-width: 500px;
-        }
-        h1 { 
-            text-align: center;
-            font-size: 25px; 
-        }
-        .inputfields {
-            text-align: center;
-        }
-        .error {
-            color: darkred
-        }
-        footer {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            background-color: black;
-            color: white;
-            text-align: center;
-        }
-        p {
-            font-size: 10px;
-        }
-    </style>
-    
+    <link rel="stylesheet" href="styles.css">
+
+    <script defer src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js'></script>
+    <script defer src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+    <script defer src='./myChart.js'></script>
 </head>
 
 <body>
-    <h1>Population charts</h1>
+    <h1>Population graphs</h1>
     <div class='inputfields'>
-        <input class='textinput' placeholder='Country' type='text' name='country' id='country' maxlength='50' />
-        <br>
-        <button class='button' id='renderBtn'>
-            Render population chart
-        </button>
-        <br>
-        <span class='error' id='errorbox'></span>
+        <p>
+            <input class='textinput' placeholder='Country' type='text' name='country' id='country' maxlength='50' />
+        </p>
+        <p>
+            <button class='button' id='renderBtn'>Render population graph</button>
+        </p>
+        <p>
+            <span class='error' id='errorbox'></span>
+        </p>
     </div>
     <div class='container'>        
         <canvas id='myChart'></canvas>
@@ -60,11 +36,5 @@
         <p>Used data: World Bank
         <br>Data licence: CC BY 4.0</p>
     </footer>
-
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js'></script>
-    <script src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
-    <script src='./myChart.js'></script>
-
 </body>
 </html>
-
