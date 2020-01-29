@@ -4,7 +4,7 @@ Simple app to visualize World Bank population data.
 ![alt text](./worldbank_screen.png "World Bank population data visualizer screenshot")
 
 ## Deployed version
-The app is deployed at xxx.
+The app is deployed at https://world-bank-data.appspot.com.
 
 ## Backend
 Source for cloud function version of backend is at https://github.com/mikkokotola/populationgraphs-backendfunction.
@@ -13,10 +13,10 @@ Source for cloud function version of backend is at https://github.com/mikkokotol
 Nothing needed to install. This is a simple frontend using data from a REST API.
 
 ## How to run locally
-Open the file index.html using a browser.
+Open the file index.html (in folder public) using a browser.
 
 ## How to edit code
-Open the file index.html or myChart.js using an editing tool (e.g. Visual Studio Code).
+Open the file index.html or myChart.js (in folder public) using an editing tool (e.g. Visual Studio Code).
 
 ## How it works
 The frontend fetches data from a REST API serving World Bank open population data and visualizes it using Chart.js. The user enters the country code (as [ISO3 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)) for the country to visualize.
