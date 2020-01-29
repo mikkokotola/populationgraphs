@@ -2,6 +2,10 @@
 data/
 localdocs/
 
+# Google cloud deployment files
+.gcloudignore
+app.yaml
+
 # THE FOLLOWING FROM TEMPLATE AT https://github.com/github/gitignore/blob/master/Node.gitignore
 # Logs
 logs
