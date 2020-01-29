@@ -1,6 +1,14 @@
+var currentChart;
+
 function renderChart(data, labels) {
     var ctx = document.getElementById("myChart").getContext('2d');
-    var myChart = new Chart(ctx, {
+    if (currentChart) {
+        // Clear the previous chart if it exists
+        currentChart.destroy();
+    }
+    
+    // Draw new chart
+    currentChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
