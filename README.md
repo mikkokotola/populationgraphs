@@ -3,6 +3,12 @@ Simple app to visualize World Bank population data.
 
 ![alt text](./worldbank_screen.png "World Bank population data visualizer screenshot")
 
+## Deployed version
+The app is deployed at xxx.
+
+## Backend
+Source for cloud function version of backend is at https://github.com/mikkokotola/populationgraphs-backendfunction.
+
 ## How to install
 Nothing needed to install. This is a simple frontend using data from a REST API.
 
@@ -23,6 +29,12 @@ The REST API is currently running as a Google Cloud Function at https://europe-w
 The calls to the REST API are of the format https://europe-west1-world-bank-data.cloudfunctions.net/world-bank-fetcher/country/:countryCode/indicator/:indicatorCode
 
 Example call to fetch population data of Finland: https://europe-west1-world-bank-data.cloudfunctions.net/world-bank-fetcher/country/FIN/indicator/SP.POP.TOTL
+
+## Country codes
+The country codes are [ISO3 country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3).
+
+## Indicator codes
+Indicator codes are [World bank indicator codes](https://datahelpdesk.worldbank.org/knowledgebase/articles/201175-how-does-the-world-bank-code-its-indicators). Currently the only supported indicator is the total population time series of a country: SP.POP.TOTL.
 
 ## Data
 Data from the World Bank (CC BY 4.0). See https://datahelpdesk.worldbank.org/knowledgebase/topics/125589.
