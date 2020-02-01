@@ -2,17 +2,49 @@
     margin: auto;
     width: 100vh;
     max-width: 100vw;
-    min-width: 500px;
 }
-h1 { 
+
+h1 {
     text-align: center;
 }
+
 .inputfields {
     text-align: center;
 }
+
+.countrydetails {
+    text-align: center;
+    display: flex;
+    line-height: 0.2;
+}
+
+.columnleft {
+    text-align: right;
+    flex: 50%;
+    padding: 5px;
+}
+
+.columnright {
+    text-align: left;
+    flex: 50%;
+    padding: 5px;
+}
+
+#countryname {
+    font-weight: bold;
+}
+
+#flag {
+    width: 10vh;
+    height: auto;
+    border-radius: 3px;
+    border:1px solid black
+}
+
 .error {
     color: darkred
 }
+
 footer {
     position: fixed;
     left: 0;
