@@ -30,7 +30,7 @@ h1 {
     padding: 5px;
 }
 
-#countryname {
+#countryName {
     font-weight: bold;
 }
 
@@ -52,5 +52,6 @@ footer {
     width: 100%;
     background-color: black;
     color: white;
+    font-size: small;
     text-align: center;
 }

@@ -33,18 +33,18 @@ function renderChart(data, labels) {
 
 function renderCountryInfo(countryName, capital, region, flagUrl) {
     // Create an image element
-    var img = document.createElement('img'); 
+    var img = document.createElement('img');
     img.src = flagUrl;
     img.id = 'flag';
-    img.alt='Country flag';
+    img.alt = 'Country flag';
 
     // Insert the texts and image element into the HTML document
-    document.getElementById('countryName').innerHTML = countryName;
-    document.getElementById('capital').innerHTML = 'Capital: ' + capital;
-    document.getElementById('region').innerHTML = 'Region:' + region;
+    document.getElementById('countryName').textContent = countryName;
+    document.getElementById('capital').textContent = 'Capital: ' + capital;
+    document.getElementById('region').textContent = 'Region:' + region;
     if (document.getElementById('flagcontainer').firstChild !== null) {
         document.getElementById('flagcontainer').firstChild.remove();
-    }    
+    }
     document.getElementById('flagcontainer').appendChild(img);
 }
 
@@ -82,7 +82,7 @@ function validateInput(countryCode, indicatorCode) {
         renderError('Country code malformed. Valid example: FIN');
         return;
     }
-    
+
     if (!validateIndicator(indicatorCode)) {
         console.log('Invalid indicatorCode: ' + indicatorCode)
         renderError('Indicator code malformed. Valid example: SP.POP.TOTL');
@@ -108,90 +108,89 @@ async function fetchDataAndRenderGraph(countryCode, indicatorCode) {
     // NOTE: could call directly const url='https://api.worldbank.org/v2/country/' + countryCode + '/indicator/' + indicatorCode + '?format=json';
     // ,but World Bank CORS policy not allowing requests from file run in browser.
 
-    fetch(url, {
-        method: 'GET',
-        headers: {
-            //'Content-Type': 'application/json'
-            'Content-Type': 'text/plain'
-        }
-    })
-        .then(async function (response) {
-            if (response.status == 422) {
-                renderError('Malformed country code');
-            }
-            else if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            else {
-                if (response.status == 200) {
-                    var dataAsString = await response.json();
-                    fetchedData = JSON.parse(dataAsString)
-                    
-                    if (fetchedData[0].message) {
-                        throw (JSON.stringify(fetchedData[0].message));
-                    }
+    var response = await fetch(url);
 
-                    var data = getValues(fetchedData);
-                    var labels = getLabels(fetchedData);
-                    renderChart(data, labels);
-                } else {
-                    renderError('Fetching population data from server failed');
+    try {
+        if (response.status == 422) {
+            renderError('Malformed country code');
+            return false;
+        }
+        else if (!response.ok) {
+            throw Error(response.statusText);
+        }
+        else {
+            if (response.status == 200) {
+                var dataAsString = await response.json();
+                fetchedData = JSON.parse(dataAsString)
+
+                if (fetchedData[0].message) {
+                    throw (JSON.stringify(fetchedData[0].message));
                 }
+
+                var data = getValues(fetchedData);
+                var labels = getLabels(fetchedData);
+                renderChart(data, labels);
+                // Return country name as plain text
+                return fetchedData[1][0].country.value;
+            } else {
+                renderError('Fetching population data from server failed');
+                return false;
             }
-        })
-        .catch(function (error) {
-            console.log(error)
-            renderError('Fetching population data from server failed. ' + error);
-        });
+        }
+    }
+    catch (error) {
+        console.log(error)
+        renderError('Fetching population data from server failed. ' + error);
+        return false;
+    };
 }
 
-async function fetchDataAndRenderCountryInfo(countryCode) {
+async function fetchDataAndRenderCountryInfo(countryName) {
     // REST Countries API
     const baseUrl = 'https://restcountries.eu/rest/v2/name/';
-    const url = baseUrl + countryCode;
-    
-    fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'text/plain'
-        }
-    })
-        .then(async function (response) {
-            if (response.status == 422) {
-                renderError('Malformed country code');
-            }
-            else if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            else {
-                if (response.status == 200) {
-                    //var dataAsString = await response.json();
-                    var countryData = await response.json();
-                    //var countryData = JSON.parse(dataAsString);
+    const url = baseUrl + countryName;
 
-                    var countryName = countryData[0].name;
-                    var countryCapital = countryData[0].capital;
-                    var countryRegion = countryData[0].region;
-                    var countryFlagUrl = countryData[0].flag;
-                    
-                    renderCountryInfo(countryName, countryCapital, countryRegion, countryFlagUrl);
-                } else {
-                    renderCountryDataError('Fetching country data from RESTCountries API failed');
-                }
+    var response = await fetch(url);
+
+    try {
+        if (response.status == 422) {
+            renderError('Malformed country code');
+        }
+        else if (!response.ok) {
+            throw Error(response.statusText);
+        }
+        else {
+            if (response.status == 200) {
+                //var dataAsString = await response.json();
+                var countryData = await response.json();
+                //var countryData = JSON.parse(dataAsString);
+
+                var countryName = countryData[0].name;
+                var countryCapital = countryData[0].capital;
+                var countryRegion = countryData[0].region;
+                var countryFlagUrl = countryData[0].flag;
+
+                renderCountryInfo(countryName, countryCapital, countryRegion, countryFlagUrl);
+            } else {
+                renderCountryDataError('Fetching country data from RESTCountries API failed');
             }
-        })
-        .catch(function (error) {
-            console.log(error)
-            renderError('Fetching population data from server failed. ' + error);
-        });
+        }
+    }
+    catch (error) {
+        console.log(error)
+        renderError('Fetching population data from server failed. ' + error);
+        return false;
+    };
 }
 
-function renderCountryView() {
-    var country = document.getElementById('country').value;
+async function renderCountryView() {
+    var countryCode = document.getElementById('country').value;
     const indicator = 'SP.POP.TOTL';
-    validateInput(country, indicator);
-    fetchDataAndRenderGraph(country, indicator);
-    fetchDataAndRenderCountryInfo(country);
+    validateInput(countryCode, indicator);
+    var countryName = await fetchDataAndRenderGraph(countryCode, indicator);
+    if (countryName) {
+        await fetchDataAndRenderCountryInfo(countryName);
+    }
 }
 
 document.getElementById('renderBtn').addEventListener('click', renderCountryView);
