@@ -41,7 +41,7 @@ function renderCountryInfo(countryName, capital, region, flagUrl) {
     // Insert the texts and image element into the HTML document
     document.getElementById('countryName').textContent = countryName;
     document.getElementById('capital').textContent = 'Capital: ' + capital;
-    document.getElementById('region').textContent = 'Region:' + region;
+    document.getElementById('region').textContent = 'Region: ' + region;
     if (document.getElementById('flagcontainer').firstChild !== null) {
         document.getElementById('flagcontainer').firstChild.remove();
     }
@@ -59,7 +59,7 @@ function getLabels(data) {
 }
 
 function validateCountryCode(input) {
-    if (input.match(/^[a-zA-Z]+$/)) {
+    if (input.match(/^[a-zA-Z]{3}$/)) {
         return true;
     }
     else {
@@ -79,7 +79,7 @@ function validateIndicator(input) {
 function validateInput(countryCode, indicatorCode) {
     if (!validateCountryCode(countryCode)) {
         console.log('Invalid countryCode: ' + countryCode)
-        renderError('Country code malformed. Valid example: FIN');
+        renderError('Country code malformed. Must be tree letters. Valid example: FIN');
         return;
     }
 
@@ -113,7 +113,6 @@ async function fetchDataAndRenderGraph(countryCode, indicatorCode) {
     try {
         if (response.status == 422) {
             renderError('Malformed country code');
-            return false;
         }
         else if (!response.ok) {
             throw Error(response.statusText);
@@ -130,25 +129,21 @@ async function fetchDataAndRenderGraph(countryCode, indicatorCode) {
                 var data = getValues(fetchedData);
                 var labels = getLabels(fetchedData);
                 renderChart(data, labels);
-                // Return country name as plain text
-                return fetchedData[1][0].country.value;
             } else {
                 renderError('Fetching population data from server failed');
-                return false;
             }
         }
     }
     catch (error) {
         console.log(error)
         renderError('Fetching population data from server failed. ' + error);
-        return false;
     };
 }
 
-async function fetchDataAndRenderCountryInfo(countryName) {
-    // REST Countries API
-    const baseUrl = 'https://restcountries.eu/rest/v2/name/';
-    const url = baseUrl + countryName;
+async function fetchDataAndRenderCountryInfo(countryCode) {
+    // REST Countries API using ISO 3166-1 3-letter country codes
+    const baseUrl = 'https://restcountries.eu/rest/v2/alpha/';
+    const url = baseUrl + countryCode;
 
     var response = await fetch(url);
 
@@ -165,12 +160,12 @@ async function fetchDataAndRenderCountryInfo(countryName) {
                 var countryData = await response.json();
                 //var countryData = JSON.parse(dataAsString);
 
-                var countryName = countryData[0].name;
-                var countryCapital = countryData[0].capital;
-                var countryRegion = countryData[0].region;
-                var countryFlagUrl = countryData[0].flag;
+                var countryCode = countryData.name;
+                var countryCapital = countryData.capital;
+                var countryRegion = countryData.region;
+                var countryFlagUrl = countryData.flag;
 
-                renderCountryInfo(countryName, countryCapital, countryRegion, countryFlagUrl);
+                renderCountryInfo(countryCode, countryCapital, countryRegion, countryFlagUrl);
             } else {
                 renderCountryDataError('Fetching country data from RESTCountries API failed');
             }
@@ -179,7 +174,6 @@ async function fetchDataAndRenderCountryInfo(countryName) {
     catch (error) {
         console.log(error)
         renderError('Fetching population data from server failed. ' + error);
-        return false;
     };
 }
 
@@ -187,10 +181,8 @@ async function renderCountryView() {
     var countryCode = document.getElementById('country').value;
     const indicator = 'SP.POP.TOTL';
     validateInput(countryCode, indicator);
-    var countryName = await fetchDataAndRenderGraph(countryCode, indicator);
-    if (countryName) {
-        await fetchDataAndRenderCountryInfo(countryName);
-    }
+    fetchDataAndRenderGraph(countryCode, indicator);
+    fetchDataAndRenderCountryInfo(countryCode);
 }
 
 document.getElementById('renderBtn').addEventListener('click', renderCountryView);
