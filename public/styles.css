@@ -15,7 +15,9 @@ h1 {
 .countrydetails {
     text-align: center;
     display: flex;
-    line-height: 0.2;
+}
+#countryName, #region, #capital {
+    margin: 0;
 }
 
 .columnleft {
