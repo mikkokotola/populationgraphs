@@ -3,51 +3,11 @@
 
 <head>
     <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
-    <title>Population graphs</title>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css">
-
-    <script defer src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js'></script>
-    <script defer src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
-    <script defer src='./myChart.js'></script>
+    <title>Title here</title>
 </head>
 
 <body>
-    <h1>Population graphs</h1>
-    <div class='inputfields'>
-        <p>Enter three letter <a href='https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes' target='_blank'>country code</a></p>
-        <p>
-            <input class='textinput' placeholder='Country' type='text' name='country' id='country' maxlength='50' />
-        </p>
-        <p>
-            <button class='button' id='renderBtn'>Render population graph</button>
-        </p>
-        <p>
-            <span class='error' id='errorPopulationData'></span>
-        </p>
-        <p>
-            <span class='error' id='errorCountryData'></span>
-        </p>
-    </div>
-    <div class='countrydetails'>
-        <div class='columnleft' id='flagcontainer'></div>
-        <div class='columnright'>
-            <p id='countryName'></p>
-            <p id='region'></p>
-            <p id='capital'></p>
-        </div>
-        
-    </div>
-    <div class='container'>        
-        <canvas id='myChart'></canvas>
-    </div>
 
-    <footer>
-        <p>Population data: World Bank (CC BY 4.0)
-        <br/>County capitals and regions: RESTCountries (MPL 2.0)</p>
-    </footer>
 </body>
+
 </html>
