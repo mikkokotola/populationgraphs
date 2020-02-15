@@ -8,7 +8,11 @@ h1 {
     text-align: center;
 }
 
-.inputfields {
+.dropdown {
+    text-align: center;
+}
+
+.errorfields {
     text-align: center;
 }
 
@@ -45,10 +49,6 @@ h1 {
 
 .error {
     color: darkred
-}
-
-.dropdown {
-    text-align: center;
 }
 
 footer {
