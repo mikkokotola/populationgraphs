@@ -102,11 +102,8 @@ function renderCountryDataError(errorMessage) {
 }
 
 async function fetchDataAndRenderGraph(countryCode, indicatorCode) {
-    // Function in Google cloud
-    const baseUrl = 'https://europe-west1-world-bank-data.cloudfunctions.net/world-bank-fetcher/country/'
-    const url = baseUrl + countryCode + '/indicator/' + indicatorCode
-    // NOTE: could call directly const url='https://api.worldbank.org/v2/country/' + countryCode + '/indicator/' + indicatorCode + '?format=json';
-    // ,but World Bank CORS policy not allowing requests from file run in browser.
+    const baseUrl = 'https://api.worldbank.org/v2/country/'
+    const url = baseUrl + countryCode + '/indicator/' + indicatorCode + '?format=json'
 
     var response = await fetch(url);
 
@@ -119,11 +116,10 @@ async function fetchDataAndRenderGraph(countryCode, indicatorCode) {
         }
         else {
             if (response.status == 200) {
-                var dataAsString = await response.json();
-                fetchedData = JSON.parse(dataAsString)
-
+                var fetchedData = await response.json();
+                
                 if (fetchedData[0].message) {
-                    throw (JSON.stringify(fetchedData[0].message));
+                    throw (fetchedData[0].message);
                 }
 
                 var data = getValues(fetchedData);
