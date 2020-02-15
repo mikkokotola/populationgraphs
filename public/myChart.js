@@ -1,11 +1,14 @@
 var currentChart;
 
-function renderChart(data, labels) {
-    var ctx = document.getElementById("myChart").getContext('2d');
+function clearChart() {
     if (currentChart) {
         // Clear the previous chart if it exists
         currentChart.destroy();
     }
+}
+
+function renderChart(data, labels) {
+    var ctx = document.getElementById("myChart").getContext('2d');
 
     // Draw new chart
     currentChart = new Chart(ctx, {
@@ -31,6 +34,15 @@ function renderChart(data, labels) {
     });
 }
 
+function clearCountryInfo() {
+    document.getElementById('countryName').textContent = '';
+    document.getElementById('capital').textContent = '';
+    document.getElementById('region').textContent = '';
+    if (document.getElementById('flagcontainer').firstChild !== null) {
+        document.getElementById('flagcontainer').firstChild.remove();
+    }
+}
+
 function renderCountryInfo(countryName, capital, region, flagUrl) {
     // Create an image element
     var img = document.createElement('img');
@@ -42,9 +54,6 @@ function renderCountryInfo(countryName, capital, region, flagUrl) {
     document.getElementById('countryName').textContent = countryName;
     document.getElementById('capital').textContent = 'Capital: ' + capital;
     document.getElementById('region').textContent = 'Region: ' + region;
-    if (document.getElementById('flagcontainer').firstChild !== null) {
-        document.getElementById('flagcontainer').firstChild.remove();
-    }
     document.getElementById('flagcontainer').appendChild(img);
 }
 
@@ -57,39 +66,6 @@ function getLabels(data) {
     var labels = data[1].sort((a, b) => a.date - b.date).map(item => item.date);
     return labels;
 }
-
-function validateCountryCode(input) {
-    if (input.match(/^[a-zA-Z]{3}$/)) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-function validateIndicator(input) {
-    if (input.match(/^[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+$/)) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-function validateInput(countryCode, indicatorCode) {
-    if (!validateCountryCode(countryCode)) {
-        console.log('Invalid countryCode: ' + countryCode)
-        renderError('Country code malformed. Must be tree letters. Valid example: FIN');
-        return;
-    }
-
-    if (!validateIndicator(indicatorCode)) {
-        console.log('Invalid indicatorCode: ' + indicatorCode)
-        renderError('Indicator code malformed. Valid example: SP.POP.TOTL');
-        return;
-    }
-}
-
 
 function renderError(errorMessage) {
     document.getElementById('errorPopulationData').innerHTML = errorMessage;
@@ -108,13 +84,12 @@ async function fetchDataAndRenderGraph(countryCode, indicatorCode) {
     // NOTE: could call directly const url='https://api.worldbank.org/v2/country/' + countryCode + '/indicator/' + indicatorCode + '?format=json';
     // ,but World Bank CORS policy not allowing requests from file run in browser.
 
+    clearChart();
+
     var response = await fetch(url);
 
     try {
-        if (response.status == 422) {
-            renderError('Malformed country code');
-        }
-        else if (!response.ok) {
+        if (!response.ok) {
             throw Error(response.statusText);
         }
         else {
@@ -145,13 +120,12 @@ async function fetchDataAndRenderCountryInfo(countryCode) {
     const baseUrl = 'https://restcountries.eu/rest/v2/alpha/';
     const url = baseUrl + countryCode;
 
+    clearCountryInfo();
+
     var response = await fetch(url);
 
     try {
-        if (response.status == 422) {
-            renderError('Malformed country code');
-        }
-        else if (!response.ok) {
+        if (!response.ok) {
             throw Error(response.statusText);
         }
         else {
@@ -177,14 +151,62 @@ async function fetchDataAndRenderCountryInfo(countryCode) {
     };
 }
 
-async function renderCountryView() {
-    var countryCode = document.getElementById('country').value;
+async function renderCountryViewByCountryCode(countryCode) {
+    console.log('In renderCountryViewByCountryCode, countryCode ' + countryCode);
     const indicator = 'SP.POP.TOTL';
-    validateInput(countryCode, indicator);
     fetchDataAndRenderGraph(countryCode, indicator);
     fetchDataAndRenderCountryInfo(countryCode);
 }
 
-document.getElementById('renderBtn').addEventListener('click', renderCountryView);
+function addMenuItems(countryList) {
+    var menu = document.getElementById('countrymenucontent');
+    countryList.forEach(function (country) {
+        // Skip aggregate areas such as "EU" and "EMU area"
+        if (country.capitalCity === '') {
+            return;
+        } 
+        var btn = document.createElement('BUTTON');
+        var btnId = 'btn-' +  country.id
+        btn.setAttribute('id', btnId);
+        btn.setAttribute('class', 'dropdown-item');
+        btn.setAttribute('type', 'button');
+        var textContent = document.createTextNode(country.name); 
+        btn.appendChild(textContent);
+        menu.appendChild(btn);
+        btn.addEventListener('click', () => renderCountryViewByCountryCode(country.id));
+    } );
+}
+function sortCountriesAlphabeticallyByName(a, b) {
+    if (a.name < b.name) { return -1; }
+    if (a.name > b.name) { return 1; }
+    return 0;
+}
 
-document.getElementById('country').focus();
+async function fetchCountryList() {
+    // World bank API, fetch 400 per page, meaning that we get the whole country list
+    const url = 'https://api.worldbank.org/v2/country?format=json&per_page=400';
+
+    console.log('In fetchCountryList')
+    var response = await fetch(url);
+
+    try {
+        if (!response.ok) {
+            throw Error(response.statusText);
+        }
+        else {
+            if (response.status == 200) {
+                console.log('Got Countrylist response')
+                var countryData = await response.json();
+                countryList = countryData[1].sort(sortCountriesAlphabeticallyByName); 
+                addMenuItems(countryList);
+            } else {
+                console.log('Error with fetching country list')
+            }
+        }
+    }
+    catch (error) {
+        console.log(error)
+    };
+}
+
+fetchCountryList();

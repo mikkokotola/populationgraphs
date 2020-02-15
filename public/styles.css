@@ -47,6 +47,10 @@ h1 {
     color: darkred
 }
 
+.dropdown {
+    text-align: center;
+}
+
 footer {
     position: fixed;
     left: 0;
