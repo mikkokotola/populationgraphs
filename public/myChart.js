@@ -1,7 +1,7 @@
 // Define a function called logCountryCode. This function takes no arguments 
 // (the brackets after the function name are empty). When the function is called, 
 // the two indented lines of code are executed.
-function logCountryCode() {
+function logCountryCode () {
     // Define a variable called countryCode. Put into it the value that is in the 
     //HTML element with id 'country'.
     var countryCode = document.getElementById('country').value;
@@ -26,5 +26,37 @@ async function fetchData() {
     if (response.status == 200) {
         var fetchedData = await response.json();
         console.log(fetchedData);
+
+        var data = getValues(fetchedData);
+        var labels = getLabels(fetchedData);
+        renderChart(data, labels);
     }
+}
+
+function getValues(data) {
+    var vals = data[1].sort((a, b) => a.date - b.date).map(item => item.value);
+    return vals;
+}
+
+function getLabels(data) {
+    var labels = data[1].sort((a, b) => a.date - b.date).map(item => item.date);
+    return labels;
+}
+
+function renderChart(data, labels) {
+    var ctx = document.getElementById("myChart").getContext('2d');
+    
+    // Draw new chart
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Population',
+                data: data,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            }]
+        }
+    });
 }
