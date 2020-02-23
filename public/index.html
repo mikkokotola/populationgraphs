@@ -8,24 +8,28 @@
 
 <body>
     <h1>Population graphs</h1>
-    <p>Enter three letter <a href='https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes' target='_blank'>country code</a></p>
+    <p>Enter three letter <a href='https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes' 
+        target='_blank'>country code</a></p>
     <input class='textinput' placeholder='Country' type='text' id='country' maxlength='3'/>
     <p>
         <button class='button' id='renderBtn'>Render population graph</button>
     </p>
 
     <script>
-        // Define a function called logCountryCode. This function takes no arguments (the brackets after the function name
-        // are empty). When the function is called, the two indented lines of code are executed.
+        // Define a function called logCountryCode. This function takes no arguments 
+        // (the brackets after the function name are empty). When the function is called, 
+        // the two indented lines of code are executed.
         function logCountryCode () {
-            // Define a variable called countryCode. Put into it the value that is in the HTML element with id 'country'.
+            // Define a variable called countryCode. Put into it the value that is in the 
+            //HTML element with id 'country'.
             var countryCode = document.getElementById('country').value;
             // Print the value of the variable countryCode into the console.
             console.log(countryCode);
         }
 
-        // Add an event listener to the HTML element with the id 'renderBtn'. That's our button. When the event 'click' happens
-        // (when the button is clicked), run the function 'logCountryCode'.
+        // Add an event listener to the HTML element with the id 'renderBtn'. That's our 
+        // button. When the event 'click' happens (when the button is clicked), run the 
+        // function 'logCountryCode'.
         document.getElementById('renderBtn').addEventListener('click', logCountryCode);
     </script>
 </body>
