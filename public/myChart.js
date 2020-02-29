@@ -1,6 +1,6 @@
 var currentChart;
 
-function renderChart(data, labels) {
+function renderChart(data, labels, countryName) {
     var ctx = document.getElementById("myChart").getContext('2d');
     if (currentChart) {
         // Clear the previous chart if it exists
@@ -13,7 +13,7 @@ function renderChart(data, labels) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Population',
+                label: 'Population, ' + countryName,
                 data: data,
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -56,6 +56,11 @@ function getValues(data) {
 function getLabels(data) {
     var labels = data[1].sort((a, b) => a.date - b.date).map(item => item.date);
     return labels;
+}
+
+function getCountryName(data) {
+    var countryName = data[1][0].country.value;
+    return countryName;
 }
 
 function validateCountryCode(input) {
@@ -117,14 +122,15 @@ async function fetchDataAndRenderGraph(countryCode, indicatorCode) {
         else {
             if (response.status == 200) {
                 var fetchedData = await response.json();
-                
+
                 if (fetchedData[0].message) {
                     throw (fetchedData[0].message);
                 }
 
                 var data = getValues(fetchedData);
                 var labels = getLabels(fetchedData);
-                renderChart(data, labels);
+                var countryName = getCountryName(fetchedData);
+                renderChart(data, labels, countryName);
             } else {
                 renderError('Fetching population data from server failed');
             }
