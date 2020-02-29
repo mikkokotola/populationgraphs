@@ -7,7 +7,7 @@ function clearChart() {
     }
 }
 
-function renderChart(data, labels) {
+function renderChart(data, labels, countryName) {
     var ctx = document.getElementById("myChart").getContext('2d');
 
     // Draw new chart
@@ -16,7 +16,7 @@ function renderChart(data, labels) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Population',
+                label: 'Population, ' + countryName,
                 data: data,
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -67,6 +67,11 @@ function getLabels(data) {
     return labels;
 }
 
+function getCountryName(data) {
+    var countryName = data[1][0].country.value;
+    return countryName;
+}
+
 function renderError(errorMessage) {
     document.getElementById('errorPopulationData').innerHTML = errorMessage;
     setTimeout(() => document.getElementById('errorPopulationData').innerHTML = '', 5000);
@@ -92,14 +97,15 @@ async function fetchDataAndRenderGraph(countryCode, indicatorCode) {
         else {
             if (response.status == 200) {
                 var fetchedData = await response.json();
-                
+
                 if (fetchedData[0].message) {
                     throw (fetchedData[0].message);
                 }
 
                 var data = getValues(fetchedData);
                 var labels = getLabels(fetchedData);
-                renderChart(data, labels);
+                var countryName = getCountryName(fetchedData);
+                renderChart(data, labels, countryName);
             } else {
                 renderError('Fetching population data from server failed');
             }
