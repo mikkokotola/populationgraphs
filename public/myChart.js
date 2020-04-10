@@ -3,10 +3,9 @@ var currentChart;
 document.getElementById('renderBtn').addEventListener('click', fetchData);
 
 async function fetchData() {
-    var countryCode = document.getElementById('country').value;
-    const indicatorCode = 'SP.POP.TOTL';
-    const baseUrl = 'https://api.worldbank.org/v2/country/';
-    const url = baseUrl + countryCode + '/indicator/' + indicatorCode + '?format=json';
+    var areaCode = document.getElementById('area').value;
+    const url = 'https://w3qa5ydb4l.execute-api.eu-west-1.amazonaws.com/prod/processedThlData'
+    
     console.log('Fetching data from URL: ' + url);
 
     var response = await fetch(url);
@@ -15,29 +14,29 @@ async function fetchData() {
         var fetchedData = await response.json();
         console.log(fetchedData);
 
-        var data = getValues(fetchedData);
-        var labels = getLabels(fetchedData);
-        var countryName = getCountryName(fetchedData);
-        renderChart(data, labels, countryName);
+        var data = getValuesCorona(fetchedData, areaCode);
+        var labels = getLabelsCorona(fetchedData, areaCode);
+        var areaName = getAreaName(fetchedData, areaCode);
+        renderChart(data, labels, areaName);
     }
 }
 
-function getValues(data) {
-    var vals = data[1].sort((a, b) => a.date - b.date).map(item => item.value);
+function getValuesCorona(data, areaCode) {
+    var vals = data.confirmed[areaCode].sort((a, b) => a.date - b.date).map(item => item.value);
     return vals;
 }
 
-function getLabels(data) {
-    var labels = data[1].sort((a, b) => a.date - b.date).map(item => item.date);
+function getLabelsCorona(data, areaCode) {
+    var labels = data.confirmed[areaCode].sort((a, b) => a.date - b.date).map(item => item.date.substring(0,10));
     return labels;
 }
 
-function getCountryName(data) {
-    var countryName = data[1][0].country.value;
-    return countryName;
+function getAreaName(data, areaCode) {
+    var areaName = data.confirmed[areaCode][0].healthCareDistrict;
+    return areaName;
 }
 
-function renderChart(data, labels, countryName) {
+function renderChart(data, labels, areaName) {
     var ctx = document.getElementById('myChart').getContext('2d');
 
     if (currentChart) {
@@ -51,7 +50,7 @@ function renderChart(data, labels, countryName) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Population, ' + countryName,
+                label: 'Confirmed infections, ' + areaName,
                 data: data,
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset='UTF-8'>
-    <title>Population graph app</title>
+    <title>Corona infection visualization</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -14,17 +14,19 @@
 
 <body>
     <div class='content'>
-        <h1>Population graphs</h1>
-        <p>Enter three letter <a href='https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes' target='_blank'>country
-                code</a></p>
-        <input class='textinput' placeholder='Country' type='text' id='country' maxlength='3' />
+        <h1>Corona infection visualization</h1>
+        <p>Enter name of health care district (e.g. HUS or Pirkanmaa)</p>
+        <input class='textinput' placeholder='e.g. HUS or Pirkanmaa' type='text' id='area'/>
         <p>
-            <button class='button' id='renderBtn'>Render population graph</button>
+            <button class='button' id='renderBtn'>Render graph</button>
         </p>
         <div class='container'>        
             <canvas id='myChart'></canvas>
         </div>
     </div>
+    <footer>
+        <p>Infection data: Helsingin Sanomat (original data THL)</p>
+    </footer>
 </body>
 
 </html>
