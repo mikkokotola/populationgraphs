@@ -161,23 +161,24 @@ async function renderCountryViewByCountryCode(countryCode) {
 }
 
 function addMenuItems(countryList) {
-    var menu = document.getElementById('countrymenucontent');
+    var sel = document.getElementById('countryselect');
     countryList.forEach(function (country) {
         // Skip aggregate areas such as "EU" and "EMU area"
         if (country.capitalCity === '') {
             return;
         } 
-        var btn = document.createElement('BUTTON');
-        var btnId = 'btn-' +  country.id
-        btn.setAttribute('id', btnId);
-        btn.setAttribute('class', 'dropdown-item');
-        btn.setAttribute('type', 'button');
-        var textContent = document.createTextNode(country.name); 
-        btn.appendChild(textContent);
-        menu.appendChild(btn);
-        btn.addEventListener('click', () => renderCountryViewByCountryCode(country.id));
+
+        var opt = document.createElement('option');
+        opt.appendChild(document.createTextNode(country.name));
+        opt.value = country.id;
+        sel.appendChild(opt);
     } );
+
+    sel.addEventListener('change', (e) => {
+        if (e.target.value !== "") {renderCountryViewByCountryCode(e.target.value)}
+    });
 }
+
 function sortCountriesAlphabeticallyByName(a, b) {
     if (a.name < b.name) { return -1; }
     if (a.name > b.name) { return 1; }

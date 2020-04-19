@@ -20,12 +20,11 @@
 <body>
     <h1>Population graphs</h1>
     <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownCountryMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Select country
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownCountryMenu" id="countrymenucontent">
-        </div>
+        <select name="countryselect" id="countryselect">
+            <option value="">--Select country--</option>
+        </select>
     </div>
+
     <div class='errorfields'>
         <p>
             <span class='error' id='errorPopulationData'></span>
