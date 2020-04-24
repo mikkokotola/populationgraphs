@@ -110,9 +110,9 @@ async function fetchDataAndRenderGraph(countryCode, indicatorCode) {
     const baseUrl = 'https://api.worldbank.org/v2/country/'
     const url = baseUrl + countryCode + '/indicator/' + indicatorCode + '?format=json'
 
-    var response = await fetch(url);
-
     try {
+        var response = await fetch(url);
+        
         if (response.status == 422) {
             renderError('Malformed country code');
         }
